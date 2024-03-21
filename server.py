@@ -52,10 +52,12 @@ def set_speed():
 
 @app.route("/")
 def web():
-    html = open("web.html")
+    html = open("web-to-rpi-control/web.html")
     response = html.read().replace('\n', '')
     html.close()
     p.start(0)
     return response
-app.run(host = '172.17.21.24')
+if __name__ == "__main__":
+    app.run(host = '0.0.0.0', debug=True)
+
 
