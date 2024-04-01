@@ -10,21 +10,32 @@ app = Flask(__name__)
 
 in1 = 24
 in2 = 23
-en = 25
+in3 = 17
+in4 = 27
+enA = 25
+enB = 22
 temp1=1
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(in1,GPIO.OUT)
+GPIO.setup(in1, GPIO.OUT)
 GPIO.setup(in2, GPIO.OUT)
-GPIO.setup(en,GPIO.OUT)
-GPIO.output(in1,GPIO.LOW)
-GPIO.output(in2,GPIO.LOW)
-p=GPIO.PWM(en,100)
+GPIO.setup(in3, GPIO.OUT)
+GPIO.setup(in4, GPIO.OUT)
+GPIO.setup(enA, GPIO.OUT)
+GPIO.setup(enB, GPIO.OUT)
+
+GPIO.output(in1, GPIO.LOW)
+GPIO.output(in2, GPIO.LOW)
+GPIO.output(in3, GPIO.LOW)
+GPIO.output(in4, GPIO.LOW)
+pA=GPIO.PWM(enA,100)
+pB=GPIO.PWM(enB,100)
 
 def video_stream():
     while True:
         ret, frame = video.read()
+	#cv2.flip("172.17.21.24:5000/video_feed", 90)
         if not ret:
             break
         else:
@@ -37,25 +48,52 @@ def video_stream():
 def video_feed():
     return Response(video_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route("/set_speed")
-def set_speed():
-    speed = request.args.get("speed")
-    GPIO.output(in1,GPIO.HIGH)
-    GPIO.output(in2,GPIO.LOW)
-    if int(speed) < 0:
-        GPIO.output(in1,GPIO.LOW)
-        GPIO.output(in2,GPIO.HIGH)
-    p.ChangeDutyCycle(abs(int(speed)))
-
-    return "Recieved " + str(speed)
-
+@app.route("/set_dir")
+def set_dir():
+	key = request.args.get("key").lower()
+	if key == "w":
+		GPIO.output(in1, GPIO.HIGH)
+		GPIO.output(in2, GPIO.LOW)
+		GPIO.output(in3, GPIO.HIGH)
+		GPIO.output(in4, GPIO.LOW)
+	if key == "a":
+		GPIO.output(in1, GPIO.HIGH)
+		GPIO.output(in2, GPIO.LOW)
+		GPIO.output(in3, GPIO.LOW)
+		GPIO.output(in4, GPIO.HIGH)
+	if key == "d":
+		GPIO.output(in1, GPIO.LOW)
+		GPIO.output(in2, GPIO.HIGH)
+		GPIO.output(in3, GPIO.HIGH)
+		GPIO.output(in4, GPIO.LOW)
+	if key == "s":
+		GPIO.output(in1, GPIO.LOW)
+		GPIO.output(in2, GPIO.HIGH)
+		GPIO.output(in3, GPIO.LOW)
+		GPIO.output(in4, GPIO.HIGH)
+	if key == "l":
+		pA.ChangeDutyCycle(100)
+		pB.ChangeDutyCycle(100)
+	if key == "m":
+		pA.ChangeDutyCycle(500)
+		pB.ChangeDutyCycle(500)
+	if key == "h":
+		pA.ChangeDutyCycle(1000)
+		pB.ChangeDutyCycle(1000)
+	if key == "":
+		GPIO.output(in1, GPIO.LOW)
+		GPIO.output(in2, GPIO.LOW)
+		GPIO.output(in3, GPIO.LOW)
+		GPIO.output(in4, GPIO.LOW)
+	return "Recieved " + key
 
 @app.route("/")
 def web():
-    html = open("web-to-rpi-control/web.html")
+    html = open("web.html")
     response = html.read().replace('\n', '')
     html.close()
-    p.start(0)
+    pA.start(25)
+    pB.start(25)
     return response
 if __name__ == "__main__":
     app.run(host = '0.0.0.0', debug=True)

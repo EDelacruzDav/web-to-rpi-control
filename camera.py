@@ -8,6 +8,7 @@ def generate_frames():
     with picamera.PiCamera() as camera:
         camera.resolution = (640, 480)
         camera.framerate = 24
+	camera.rotation = 180
         stream = io.BytesIO()
         
         for _ in camera.capture_continuous(stream, 'jpeg', use_video_port=True):

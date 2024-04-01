@@ -5,28 +5,21 @@
 </head>
 <body>
     <div class="row">
-        <img class="my-5 mx-auto" id="bg" src="http://172.17.21.24:5000/video_feed" style="width: 75%;"/>
+        <img class="my-5 mx-auto" id="bg" src="http://172.17.21.24:5000/video_feed" style="width: 75%; rotate: 180deg;"/>
     </div>
     <div class="text-center">
         <h2>Controls</h2>
-        <div id="slidecontainer">
-            <input type="range" min="-100" max="100" value="0" id="range1">
-            <p>Value: <span id="range1_value"></span></p>
-        </div>
+        <p>w=forward</p>
     </div>
     <script>
-        var slider = document.getElementById("range1");
-        var output = document.getElementById("range1_value");
-        console.log("test");
-        slider.oninput = function() {
-            output.innerHTML = slider.value;
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {}
-            };
-            xhttp.open("GET", "http://172.17.21.24:5000/set_speed?speed=" + slider.value, true);
-            xhttp.send();
-        }
+	document.addEventListener('keydown', (e) => {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {}
+		};
+		xhttp.open("GET", "http://172.17.21.24:5000/set_dir?key=" + e.key, true);
+		xhttp.send();
+	});
     </script>
 </body>
 
