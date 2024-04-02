@@ -29,8 +29,8 @@ GPIO.output(in1, GPIO.LOW)
 GPIO.output(in2, GPIO.LOW)
 GPIO.output(in3, GPIO.LOW)
 GPIO.output(in4, GPIO.LOW)
-pA=GPIO.PWM(enA,100)
-pB=GPIO.PWM(enB,100)
+pA=GPIO.PWM(enA,25)
+pB=GPIO.PWM(enB,25)
 
 def video_stream():
     while True:
@@ -72,14 +72,14 @@ def set_dir():
 		GPIO.output(in3, GPIO.LOW)
 		GPIO.output(in4, GPIO.HIGH)
 	if key == "l":
+		pA.ChangeDutyCycle(25)
+		pB.ChangeDutyCycle(25)
+	if key == "m":
+		pA.ChangeDutyCycle(50)
+		pB.ChangeDutyCycle(50)
+	if key == "h":
 		pA.ChangeDutyCycle(100)
 		pB.ChangeDutyCycle(100)
-	if key == "m":
-		pA.ChangeDutyCycle(500)
-		pB.ChangeDutyCycle(500)
-	if key == "h":
-		pA.ChangeDutyCycle(1000)
-		pB.ChangeDutyCycle(1000)
 	if key == "":
 		GPIO.output(in1, GPIO.LOW)
 		GPIO.output(in2, GPIO.LOW)
@@ -89,11 +89,11 @@ def set_dir():
 
 @app.route("/")
 def web():
-    html = open("web.html")
+    html = open("web-to-rpi-control/web.html")
     response = html.read().replace('\n', '')
     html.close()
-    pA.start(25)
-    pB.start(25)
+    pA.start(100)
+    pB.start(100)
     return response
 if __name__ == "__main__":
     app.run(host = '0.0.0.0', debug=True)
