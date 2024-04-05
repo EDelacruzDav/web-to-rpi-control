@@ -85,7 +85,7 @@ def set_dir():
 @app.route("/stop_dir")
 def stop_dir():
 	key = request.args.get("key").lower()
-	if key = 'w' or 'a' or 's' or 'd':
+	if key == 'w' or 'a' or 's' or 'd':
 		GPIO.output(in1, GPIO.LOW)
 		GPIO.output(in2, GPIO.LOW)
 		GPIO.output(in3, GPIO.LOW)
