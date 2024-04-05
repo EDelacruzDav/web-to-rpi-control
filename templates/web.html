@@ -22,12 +22,20 @@
         <div class="col"></div>
     </div>
     <script>
-	document.addEventListener('keydown', (e) => {
+	document.addEventListener('keyup', (e) => {
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {}
 		};
 		xhttp.open("GET", "http://172.17.21.24:5000/set_dir?key=" + e.key, true);
+		xhttp.send();
+	});
+    document.addEventListener('keydown', (e) => {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {}
+		};
+		xhttp.open("GET", "http://172.17.21.24:5000/stop_dir?key=" + e.key, true);
 		xhttp.send();
 	});
     </script>

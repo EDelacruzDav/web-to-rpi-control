@@ -80,16 +80,20 @@ def set_dir():
 	if key == "h":
 		pA.ChangeDutyCycle(100)
 		pB.ChangeDutyCycle(100)
-	if key == "":
+	return "Recieved " + key
+
+@app.route("/stop_dir")
+def stop_dir():
+	key = request.args.get("key").lower()
+	if key = 'w' or 'a' or 's' or 'd':
 		GPIO.output(in1, GPIO.LOW)
 		GPIO.output(in2, GPIO.LOW)
 		GPIO.output(in3, GPIO.LOW)
 		GPIO.output(in4, GPIO.LOW)
-	return "Recieved " + key
 
 @app.route("/")
 def web():
-    html = open("web-to-rpi-control/web.html")
+    html = open("/home/pi/new-web-to-rpi-control/web-to-rpi-control/templates/web.html")
     response = html.read().replace('\n', '')
     html.close()
     pA.start(100)
